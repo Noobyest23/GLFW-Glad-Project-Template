@@ -1,0 +1,38 @@
+#ifndef NAPP
+#define NAPP
+
+#include "window.h"
+#include "texture.h"
+#include "mesh.h"
+#include "shader.h"
+#include "input.h"
+#include "DevMenu.h"
+
+
+class Application {
+public:
+
+	void run();
+
+	Application();
+
+	~Application();
+
+	bool isQuerying = false;
+private:
+
+	void MainLoopBegin();
+	void RenderLoopBegin(Query& query) const;
+	void RenderLoopEnd(Query& query) const;
+
+};
+
+// todo for app template
+// make configuring glad per window easier
+// move render loop stuff to window
+// 
+// controller support
+// remove berohine
+
+#endif // !NAPP
+
