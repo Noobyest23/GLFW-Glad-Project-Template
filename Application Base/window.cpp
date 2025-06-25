@@ -1,6 +1,18 @@
 #include "window.h"
 
 Window::Window(glm::ivec2 size, std::string name) {
+	//Initialize glfw
+	if (!glfwInit()) {
+		std::cout << "Glfw initialization failed!\n";
+	}
+
+	//Tell glfw what openGl version we are using
+	//version 3.3
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 	//Create the Glfw window
 	window = glfwCreateWindow(size.x, size.y, name.c_str(), NULL, NULL);
 	if (!window)
@@ -9,6 +21,8 @@ Window::Window(glm::ivec2 size, std::string name) {
 	}
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
+
+
 
 	//Initialize glad AFTER the window becomes current
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -23,14 +37,13 @@ Window::Window(glm::ivec2 size, std::string name) {
 	if (Settings::GetBool("3D")) {
 		glEnable(GL_DEPTH_TEST);
 	}
-
+	glfwSwapInterval(0);
 	
+	// Initialize imgui
 	IMGUI_CHECKVERSION();
-
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
-	(void)io; // Suppress unused variable warning
-	// Enable keyboard controls for ImGui navigation.
+	(void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
@@ -44,9 +57,26 @@ Window::~Window() {
 	ImGui::DestroyContext();
 
 	glfwDestroyWindow(window);
+	glfwTerminate();
 }
 
 // ====== API Calls ====== //
+
+void Window::DrawBegin() {
+	glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
+	glad_glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glfwPollEvents();
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
+	ImGui::NewFrame();
+	Input::Update();
+}
+
+void Window::DrawEnd() {
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	glfwSwapBuffers(window);
+}
 
 void Window::Resize(glm::ivec2 size) {
 	glfwSetWindowSize(window, size.x, size.y);

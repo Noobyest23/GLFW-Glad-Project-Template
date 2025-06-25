@@ -6,6 +6,7 @@
 #include <iostream>
 #include <glm/glm.hpp>
 #include "settings.h"
+#include "input.h"
 
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_glfw.h"
@@ -17,6 +18,9 @@ public:
 	Window(glm::ivec2 size, std::string name);
 
 	~Window();
+
+	void DrawBegin();
+	void DrawEnd();
 
 	void Resize(glm::ivec2 size);
 	glm::ivec2 getSize();
