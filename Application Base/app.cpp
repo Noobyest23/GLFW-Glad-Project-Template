@@ -117,7 +117,7 @@ void Application::MainLoopEnd() {
 	if (Settings::GetInt("TargetFramerate") != 0) {
 		float targetMs = 1000.0f / Settings::GetFloat("TargetFramerate");
 
-		// Use a busy wait approach because for precision
+		// Use a busy wait approach for precision
 		// Not great for cpu usage but its better then oversleeping
 		while (true) {
 			auto now = std::chrono::high_resolution_clock::now();
