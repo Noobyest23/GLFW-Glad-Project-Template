@@ -40,15 +40,17 @@ void Application::run() {
 			glfwSetWindowShouldClose(window.GetGLFWwindow(), true);
 		}
 
-		RenderLoopBegin(query);
+		
 		// === Render Section ===
 		window.DrawBegin();
+		RenderLoopBegin(query);
 
 		shader.Activate();
 		mesh.Draw();
 
-		window.DrawEnd();
 		RenderLoopEnd(query);
+		window.DrawEnd();
+		
 	}
 
 	std::cout << "Goodbye World!\n";
@@ -70,6 +72,8 @@ void Application::MainLoopBegin() {
 		// Open the DevMenu if F3 is pressed
 		DevMenu::SetVisible(not DevMenu::IsVisible());
 	}
+
+	frameStart = std::chrono::high_resolution_clock::now();
 }
 
 void Application::RenderLoopBegin(Query& query) const {
@@ -88,6 +92,16 @@ void Application::RenderLoopEnd(Query& query) const {
 	}
 
 	DevMenu::Draw();
+}
+
+void Application::MainLoopEnd() {
+	auto frameEnd = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<float, std::milli> elapsed = frameEnd - frameStart;
+
+	float targetMs = 1000.0f / Settings::GetFloat("TargetFramerate");
+	if (elapsed.count() < targetMs) {
+		std::this_thread::sleep_for(std::chrono::milliseconds((int)(targetMs - elapsed.count())));
+	}
 }
 
 #pragma endregion

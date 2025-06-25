@@ -37,7 +37,7 @@ Window::Window(glm::ivec2 size, std::string name) {
 	if (Settings::GetBool("3D")) {
 		glEnable(GL_DEPTH_TEST);
 	}
-	glfwSwapInterval(0);
+	//glfwSwapInterval(0); this enables v-sync on the window but framerate limiting already happens so i disabled it
 	
 	// Initialize imgui
 	IMGUI_CHECKVERSION();
