@@ -29,7 +29,7 @@ private:
 
 // todo for app template
 // make configuring glad per window easier
-// move render loop stuff to window
+// 
 // 
 // controller support
 // remove berohine
