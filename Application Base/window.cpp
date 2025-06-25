@@ -39,23 +39,25 @@ Window::Window(glm::ivec2 size, std::string name) {
 	}
 	//glfwSwapInterval(0); this enables v-sync on the window but framerate limiting already happens so i disabled it
 	
-	// Initialize imgui
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO();
-	(void)io;
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-	ImGui::StyleColorsDark();
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
-	ImGui_ImplOpenGL3_Init("#version 330");
+	// ImGui can only be initialized once per window and only supports a single window.
+	// Consecutive windows will not support im gui
+	if (ImGui::GetCurrentContext() == nullptr) {
+		// Initialize imgui
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+		ImGuiIO& io = ImGui::GetIO();
+		(void)io;
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+		ImGui::StyleColorsDark();
+
+		ImGui_ImplGlfw_InitForOpenGL(window, true);
+		ImGui_ImplOpenGL3_Init("#version 330");
+		ownesImGuiContext = true;
+	}
+
 }
 
 Window::~Window() {
-	// Cleanup ImGui
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
-	ImGui::DestroyContext();
-
 	glfwDestroyWindow(window);
 	glfwTerminate();
 }
@@ -63,18 +65,28 @@ Window::~Window() {
 // ====== API Calls ====== //
 
 void Window::DrawBegin() {
+	glfwMakeContextCurrent(window);
 	glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
+	int width, height;
+	glfwGetFramebufferSize(window, &width, &height);
+	glViewport(0, 0, width, height);
 	glad_glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glfwPollEvents();
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplGlfw_NewFrame();
-	ImGui::NewFrame();
-	Input::Update();
+	
+	if (ownesImGuiContext) {
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
+		glfwPollEvents();
+		Input::Update();
+	}
 }
 
 void Window::DrawEnd() {
-	ImGui::Render();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	if (ownesImGuiContext) {
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	}
 	glfwSwapBuffers(window);
 }
 

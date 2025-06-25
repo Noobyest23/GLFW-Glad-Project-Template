@@ -5,6 +5,7 @@ void Application::run() {
 
 	// Creating the window needs to go BEFORE any code that tries to use opengl functions
 	Window window(glm::ivec2(640, 640), "Project Template");
+	
 
 	Input::Init(window.GetGLFWwindow());
 
@@ -30,6 +31,8 @@ void Application::run() {
 
 	Query query;
 
+	Window window2(glm::ivec2(640, 640), "Project Template2");
+
 	while (not glfwWindowShouldClose(window.GetGLFWwindow())) {
 		MainLoopBegin();
 
@@ -51,6 +54,9 @@ void Application::run() {
 		RenderLoopEnd(query);
 		window.DrawEnd();
 		
+		window2.DrawBegin();
+		window2.DrawEnd();
+
 	}
 
 	std::cout << "Goodbye World!\n";
@@ -58,11 +64,19 @@ void Application::run() {
 
 #pragma region the stuff you dont care about
 Application::Application() {
+	
+	
+
 	Settings::Load("settings.cfg");
 }
 
 Application::~Application() {
-
+	// Cleanup ImGui
+	if (ImGui::GetCurrentContext() != nullptr) {
+		ImGui_ImplOpenGL3_Shutdown();
+		ImGui_ImplGlfw_Shutdown();
+		ImGui::DestroyContext();
+	}
 }
 
 void Application::MainLoopBegin() {

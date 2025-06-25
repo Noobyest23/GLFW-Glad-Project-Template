@@ -34,6 +34,8 @@ private:
 
 	GLFWwindow* window;
 
+	bool ownesImGuiContext = false;
+
 	static void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
 
 };
