@@ -32,7 +32,7 @@ void Application::run() {
 	shader.SetInt("u_Texture", 0);
 
 	Query query;
-
+	float r = 0, g = 0, b = 0;
 	while (not glfwWindowShouldClose(window.GetGLFWwindow())) {
 		MainLoopBegin();
 
@@ -42,7 +42,10 @@ void Application::run() {
 			// Close the app if ESC is pressed
 			glfwSetWindowShouldClose(window.GetGLFWwindow(), true);
 		}
-
+		r += 0.02f;
+		g += 0.035f;
+		b += 0.01f;
+		window.ChangeClearColor(glm::vec4(std::sin(r), std::sin(g), std::sin(b), 1.0f));
 		
 		// === Render Section ===
 		window.DrawBegin();

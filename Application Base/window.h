@@ -33,7 +33,11 @@ public:
 
 	void SwitchThisToMainWindow();
 
+	void ChangeClearColor(glm::vec4 new_color);
+
 private:
+
+	glm::vec4 clearColor = glm::vec4(0.07f, 0.13f, 0.17f, 1.0f);
 
 	GLFWwindow* window;
 

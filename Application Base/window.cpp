@@ -62,7 +62,7 @@ Window::~Window() {
 
 void Window::DrawBegin() {
 	glfwMakeContextCurrent(window);
-	glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
+	glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height);
 	glViewport(0, 0, width, height);
@@ -122,6 +122,10 @@ void Window::SwitchThisToMainWindow() {
 	else {
 		std::cout << "Im already the main window!\n";
 	}
+}
+
+void Window::ChangeClearColor(glm::vec4 newColor) {
+	clearColor = newColor;
 }
 
 // Private Functions STAY OUT... jk //
