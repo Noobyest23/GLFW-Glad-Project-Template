@@ -34,7 +34,7 @@ private:
 // todo for app template
 // make configuring glad per window easier
 // 
-// throttle framerate myself because vsync is USELESS
+// 
 // 
 // 
 // controller support
