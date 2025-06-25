@@ -37,7 +37,7 @@ Window::Window(glm::ivec2 size, std::string name) {
 	if (Settings::GetBool("3D")) {
 		glEnable(GL_DEPTH_TEST);
 	}
-	//glfwSwapInterval(0); this enables v-sync on the window but framerate limiting already happens so i disabled it
+	glfwSwapInterval(0); //framerate limiting already happens
 	
 	// ImGui can only be initialized once and only supports a single window.
 	// Consecutive windows will not support im gui
@@ -111,7 +111,7 @@ GLFWwindow* Window::GetGLFWwindow() {
 
 void Window::SwitchThisToMainWindow() {
 	if (not ownesImGuiContext) {
-		if (has_main_window = true) {
+		if (has_main_window) {
 			std::cout << "A main window already exists, delete that one and then switch\n";
 		}
 		else {

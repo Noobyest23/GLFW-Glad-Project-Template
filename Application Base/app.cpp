@@ -5,6 +5,9 @@ void Application::run() {
 
 	// Creating the window needs to go BEFORE any code that tries to use opengl functions
 	Window window(glm::ivec2(640, 640), "Project Template");
+	// Remember that when you create a window its openGL context becomes current
+	// So if you create a mesh after this windows creation then the mesh belongs to that window and will only draw on that window
+	// you can change which window is current with glfwMakeContextCurrent(window.GetGLFWwindow());
 	
 	Input::Init(window.GetGLFWwindow());
 
@@ -50,6 +53,8 @@ void Application::run() {
 
 		RenderLoopEnd(query);
 		window.DrawEnd();
+
+		MainLoopEnd();
 
 	}
 
@@ -109,12 +114,17 @@ void Application::RenderLoopEnd(Query& query) const {
 }
 
 void Application::MainLoopEnd() {
-	auto frameEnd = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<float, std::milli> elapsed = frameEnd - frameStart;
+	if (Settings::GetInt("TargetFramerate") != 0) {
+		float targetMs = 1000.0f / Settings::GetFloat("TargetFramerate");
 
-	float targetMs = 1000.0f / Settings::GetFloat("TargetFramerate");
-	if (elapsed.count() < targetMs) {
-		std::this_thread::sleep_for(std::chrono::milliseconds((int)(targetMs - elapsed.count())));
+		// Use a busy wait approach because for precision
+		// Not great for cpu usage but its better then oversleeping
+		while (true) {
+			auto now = std::chrono::high_resolution_clock::now();
+			float ms = std::chrono::duration<float, std::milli>(now - frameStart).count();
+			if (ms >= targetMs)
+				break;
+		}
 	}
 }
 
