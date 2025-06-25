@@ -31,6 +31,8 @@ public:
 
 	GLFWwindow* GetGLFWwindow();
 
+	void SwitchThisToMainWindow();
+
 private:
 
 	GLFWwindow* window;

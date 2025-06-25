@@ -109,6 +109,21 @@ GLFWwindow* Window::GetGLFWwindow() {
 	return window;
 }
 
+void Window::SwitchThisToMainWindow() {
+	if (not ownesImGuiContext) {
+		if (has_main_window = true) {
+			std::cout << "A main window already exists, delete that one and then switch\n";
+		}
+		else {
+			ownesImGuiContext = true;
+			has_main_window = true;
+		}
+	}
+	else {
+		std::cout << "Im already the main window!\n";
+	}
+}
+
 // Private Functions STAY OUT... jk //
 
 void Window::FramebufferSizeCallback(GLFWwindow* window, int width, int height) {
