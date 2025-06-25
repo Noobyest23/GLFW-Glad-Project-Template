@@ -39,17 +39,10 @@ Window::Window(glm::ivec2 size, std::string name) {
 	}
 	//glfwSwapInterval(0); this enables v-sync on the window but framerate limiting already happens so i disabled it
 	
-	// ImGui can only be initialized once per window and only supports a single window.
+	// ImGui can only be initialized once and only supports a single window.
 	// Consecutive windows will not support im gui
-	if (ImGui::GetCurrentContext() == nullptr) {
-		// Initialize imgui
-		IMGUI_CHECKVERSION();
-		ImGui::CreateContext();
-		ImGuiIO& io = ImGui::GetIO();
-		(void)io;
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-		ImGui::StyleColorsDark();
-
+	if (not has_main_window) {
+		has_main_window = true;
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
 		ImGui_ImplOpenGL3_Init("#version 330");
 		ownesImGuiContext = true;
@@ -58,6 +51,9 @@ Window::Window(glm::ivec2 size, std::string name) {
 }
 
 Window::~Window() {
+	if (ownesImGuiContext) {
+		has_main_window = false;
+	}
 	glfwDestroyWindow(window);
 	glfwTerminate();
 }

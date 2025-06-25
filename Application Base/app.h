@@ -10,6 +10,8 @@
 #include <thread>
 #include <chrono>
 
+static bool has_main_window = false;
+
 class Application {
 public:
 

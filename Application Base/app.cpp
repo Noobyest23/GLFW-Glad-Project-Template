@@ -6,7 +6,6 @@ void Application::run() {
 	// Creating the window needs to go BEFORE any code that tries to use opengl functions
 	Window window(glm::ivec2(640, 640), "Project Template");
 	
-
 	Input::Init(window.GetGLFWwindow());
 
 	Mesh mesh;
@@ -31,8 +30,6 @@ void Application::run() {
 
 	Query query;
 
-	Window window2(glm::ivec2(640, 640), "Project Template2");
-
 	while (not glfwWindowShouldClose(window.GetGLFWwindow())) {
 		MainLoopBegin();
 
@@ -53,9 +50,6 @@ void Application::run() {
 
 		RenderLoopEnd(query);
 		window.DrawEnd();
-		
-		window2.DrawBegin();
-		window2.DrawEnd();
 
 	}
 
@@ -65,7 +59,13 @@ void Application::run() {
 #pragma region the stuff you dont care about
 Application::Application() {
 	
-	
+	// Initialize imgui
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	(void)io;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	ImGui::StyleColorsDark();
 
 	Settings::Load("settings.cfg");
 }

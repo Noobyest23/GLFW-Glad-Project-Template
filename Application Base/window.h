@@ -7,6 +7,7 @@
 #include <glm/glm.hpp>
 #include "settings.h"
 #include "input.h"
+#include "app.h"
 
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_glfw.h"
