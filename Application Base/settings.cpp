@@ -18,13 +18,30 @@ void Settings::Load(const std::string& filepath) {
 		if (comment != std::string::npos) line = line.substr(0, comment);
 
 		std::istringstream iss(line);
-		std::string key, eq, value;
-		if (iss >> key >> eq >> value && eq == "=") {
+		std::string key, eq;
+		if (iss >> key >> eq && eq == "=") {
+			std::string value;
+			std::getline(iss >> std::ws, value);
 			settings[key] = value;
 		}
 	}
 	file.close();
 }
+
+void Settings::Save(const std::string& filepath) {
+	std::ofstream file(filepath);
+	if (!file.is_open()) {
+		std::cerr << "Failed to open settings file for writing: " << filepath << "\n";
+		return;
+	}
+
+	for (const auto& [key, value] : settings) {
+		file << key << " = " << value << "\n";
+	}
+
+	file.close();
+}
+
 
 bool Settings::GetBool(const std::string& key) {
 	auto val = settings[key];
@@ -42,3 +59,20 @@ float Settings::GetFloat(const std::string& key) {
 std::string Settings::GetString(const std::string& key) {
 	return settings[key];
 }
+
+void Settings::Set(const std::string& key, const std::string& value) {
+	settings[key] = value;
+}
+
+void Settings::Set(const std::string& key, bool value) {
+	settings[key] = value ? "true" : "false";
+}
+
+void Settings::Set(const std::string& key, int value) {
+	settings[key] = std::to_string(value);
+}
+
+void Settings::Set(const std::string& key, float value) {
+	settings[key] = std::to_string(value);
+}
+
