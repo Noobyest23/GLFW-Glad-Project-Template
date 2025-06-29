@@ -4,6 +4,10 @@
 #include <vector>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp> // for translate, rotate, scale
+#include <glm/gtc/type_ptr.hpp>         // for value_ptr
+
+#include "shader.h"
 
 struct Vertex {
 	glm::vec3 position;
@@ -21,9 +25,19 @@ public:
 	void Build();
 	void Draw() const;
 
+	void SetShader(Shader* shader);
+	glm::mat4 GetModelMatrix() const;
+
+	glm::vec3 position = glm::vec3(0);
+	glm::vec3 rotation = glm::vec3(0);
+	glm::vec3 scale = glm::vec3(1.0f);
+
+
 private:
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
+
+	Shader* shader;
 
 	GLuint vao = 0;
 	GLuint vbo = 0;

@@ -42,9 +42,25 @@ void Mesh::Build() {
 }
 
 void Mesh::Draw() const {
-	if (!built) return;
+	shader->Activate();
+	shader->SetMat4("model", GetModelMatrix());
 
 	glBindVertexArray(vao);
-	glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indices.size()), GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
+	glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indices.size()), GL_UNSIGNED_INT, nullptr);
+	glBindVertexArray(0); // Optional: Unbind to avoid accidental state issues
+}
+
+
+glm::mat4 Mesh::GetModelMatrix() const {
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::translate(model, position);
+	model = glm::rotate(model, rotation.x, glm::vec3(1, 0, 0));
+	model = glm::rotate(model, rotation.y, glm::vec3(0, 1, 0));
+	model = glm::rotate(model, rotation.z, glm::vec3(0, 0, 1));
+	model = glm::scale(model, scale);
+	return model;
+}
+
+void Mesh::SetShader(Shader* new_shader) {
+	shader = new_shader;
 }

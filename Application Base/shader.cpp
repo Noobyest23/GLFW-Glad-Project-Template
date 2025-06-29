@@ -79,7 +79,7 @@ void Shader::CompileErrors(unsigned int shader, const char* type) {
 		}
 	}
 	else {
-		glGetProgramiv(shader, GL_COMPILE_STATUS, &hasCompiled);
+		glGetProgramiv(shader, GL_LINK_STATUS, &hasCompiled);
 		if (hasCompiled == GL_FALSE) {
 			glGetProgramInfoLog(shader, 1024, NULL, infoLog);
 			std::cout << "SHADER LINKING ERROR FOR:" << type << "\n" << std::endl;

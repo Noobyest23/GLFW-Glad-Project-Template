@@ -9,6 +9,7 @@
 #include "DevMenu.h"
 #include <thread>
 #include <chrono>
+#include "camera.h"
 
 static bool has_main_window = false;
 

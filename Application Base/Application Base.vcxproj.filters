@@ -87,6 +87,9 @@
     <ClCompile Include="query.cpp">
       <Filter>Source Files\Project Base\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>Source Files\Project Base\OpenGL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -144,6 +147,9 @@
       <Filter>Header Files\Project Base\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="query.h">
+      <Filter>Header Files\Project Base\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
       <Filter>Header Files\Project Base\OpenGL</Filter>
     </ClInclude>
   </ItemGroup>

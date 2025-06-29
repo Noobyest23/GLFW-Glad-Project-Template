@@ -8,16 +8,20 @@ void Application::run() {
 	// Remember that when you create a window its openGL context becomes current
 	// So if you create a mesh after this windows creation then the mesh belongs to that window and will only draw on that window
 	// you can change which window is current with glfwMakeContextCurrent(window.GetGLFWwindow());
-	
+	Camera camera(1.0f, 45.0f, 0.01f, 1000.0f);
+	camera.position = { 0.0f, 0.5f, 3.0f }; // Move back along +Z
+	camera.rotation = { 0.0f, -90.0f, 0.0f };
+
+
 	Input::Init(window.GetGLFWwindow());
 
 	Mesh mesh;
 
 	// Add a simple quad
-	mesh.AddVertex({ glm::vec3(-0.75f, -0.75f, 0.0f), glm::vec2(0.0f, 0.0f) });
-	mesh.AddVertex({ glm::vec3(0.75f, -0.75f, 0.0f), glm::vec2(1.0f, 0.0f) });
-	mesh.AddVertex({ glm::vec3(0.75f,  0.75f, 0.0f), glm::vec2(1.0f, 1.0f) });
-	mesh.AddVertex({ glm::vec3(-0.75f,  0.75f, 0.0f), glm::vec2(0.0f, 1.0f) });
+	mesh.AddVertex({ glm::vec3(-1.0f, -1.0f, 0.0f), glm::vec2(0.0f, 0.0f) });
+	mesh.AddVertex({ glm::vec3(1.0f, -1.0f, 0.0f), glm::vec2(1.0f, 0.0f) });
+	mesh.AddVertex({ glm::vec3(1.0f,  1.0f, 0.0f), glm::vec2(1.0f, 1.0f) });
+	mesh.AddVertex({ glm::vec3(-1.0f,  1.0f, 0.0f), glm::vec2(0.0f, 1.0f) });
 
 	mesh.AddIndex(0); mesh.AddIndex(1); mesh.AddIndex(2);
 	mesh.AddIndex(2); mesh.AddIndex(3); mesh.AddIndex(0);
@@ -30,28 +34,34 @@ void Application::run() {
 	shader.Activate();
 	texture.Bind(0);
 	shader.SetInt("u_Texture", 0);
+	mesh.SetShader(&shader);
 
 	Query query;
 	float r = 0, g = 0, b = 0;
 	while (not glfwWindowShouldClose(window.GetGLFWwindow())) {
-		MainLoopBegin();
+		// The templates code is organized into MainLoopBegin(), MainLoopEnd(),
+		// RenderLoopBegin(), and RenderLoopEnd(). All the other code from this loop
+		// can be removed and everything will still function correctly.
 
+		MainLoopBegin();
+		
 		// === Main Update Logic ===
 		
 		if (Input::IsKeyPressed(GLFW_KEY_ESCAPE)) {
 			// Close the app if ESC is pressed
 			glfwSetWindowShouldClose(window.GetGLFWwindow(), true);
 		}
-		r += 0.02f;
-		g += 0.035f;
-		b += 0.01f;
-		window.ChangeClearColor(glm::vec4(std::sin(r), std::sin(g), std::sin(b), 1.0f));
-		
+
 		// === Render Section ===
+
+		glDisable(GL_CULL_FACE);
+
 		window.DrawBegin();
 		RenderLoopBegin(query);
 
 		shader.Activate();
+		shader.SetMat4("view", camera.GetViewMatrix());
+		shader.SetMat4("projection", camera.GetProjectionMatrix());
 		mesh.Draw();
 
 		RenderLoopEnd(query);
@@ -129,6 +139,7 @@ void Application::MainLoopEnd() {
 				break;
 		}
 	}
+
 }
 
 #pragma endregion
